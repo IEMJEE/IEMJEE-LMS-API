@@ -1,0 +1,162 @@
+openapi: 3.0.0
+info:
+  title: Post form data
+  description: Saves a set of student data from the form containing the following parameters
+  version: 1.0.0
+servers:
+  - url: https://lms.uem.edu.in
+paths:
+  /api/data:
+    post:
+      summary: Submit student data
+      operationId: submitStudentData
+      tags:
+        - Student Data
+      parameters:
+        - name: medium
+          in: query
+          description: Medium through which data is submitted
+          required: true
+          schema:
+            type: string
+            enum:
+              - organic 
+              - cpc
+              - referral
+              - none
+              - email
+              - banner
+              - landing
+        - name: campaign
+          in: query
+          description: Marketing campaign identifier  
+          required: true
+          schema:
+            type: string
+            enum:
+              - getmyuni
+              - twigz
+              - collegedunia
+              - careers360
+              - shiksha
+              - zollege
+              - collegesearch
+              - exametc
+              - justdial
+        - name: source
+          in: query
+          description: Source of lead
+          required: true
+          schema:
+            type: string
+            enum:
+              - website
+              - facebook
+              - social
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name: 
+                  type: string
+                  description: Name of the student
+                  example: John Doe
+                email:
+                  type: string
+                  description: Email of the student
+                  example: john@doe.com
+                phone:
+                  type: string
+                  description: Phone number of the student
+                  example: 9876543210
+                state:
+                  type: string
+                  description: State student belongs to
+                  example: West Bengal
+                city:
+                  type: string
+                  description: City student belongs to
+                  example: Kolkata
+                remarks:
+                  type: string
+                  description: Any additional comment/remarks the student has submitted
+                  example: Interested in B.Tech program at UEM Kolkata
+                course:
+                  type: string
+                  description: Course interested in
+                  example: btech
+                institute:
+                  type: string
+                  description: Institute interested in  
+                  example: uem_kolkata
+      responses:
+        200:
+          description: Student data submitted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: Unique identifier of the record
+                          name:
+                            type: string
+                            description: Name of the student
+                          email:
+                            type: string
+                            description: Email of the student
+                          phone:
+                            type: string
+                            description: Phone number of the student
+                          state:
+                            type: string
+                            description: State student belongs to
+                          city:
+                            type: string
+                            description: City student belongs to
+                          remarks:
+                            type: string
+                            description: Any additional comment/remarks submitted by the student
+                          medium:
+                            type: string
+                            description: Medium through which data was submitted
+                          campaign:
+                            type: string
+                            description: Marketing campaign identifier
+                          source:
+                            type: string
+                            description: Source of lead  
+                          course:
+                            type: string
+                            description: Course interested in
+                          institute:
+                            type: string
+                            description: Institute interested in
+                          created_at:
+                            type: string
+                            format: date-time
+                          updated_at:
+                            type: string
+                            format: date-time
+        400:
+          description: Bad request (missing required field)
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Error message indicating missing field
