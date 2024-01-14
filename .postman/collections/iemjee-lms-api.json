@@ -1,0 +1,559 @@
+{
+	"info": {
+		"_postman_id": "4323d02b-9de7-43b1-bab3-1471c63f3f15",
+		"name": "IEMJEE LMS API Documentation",
+		"description": "## Getting started guide\n\nPlease keep the following points in mind as you integrate the IEMJEE LMS APIs:\n\n- You must send all requests encoded as `x-www-form-urlencoded`.\n- The API has [rate and usage limits](#rate-and-usage-limits).\n- The API only responds to HTTPS-secured communications. Any requests sent via HTTP return an HTTP 301 redirect to the corresponding HTTPS resources.\n- The API returns request responses in JSON format. When an API request returns an error, it is sent in the JSON response as an error key.\n    \n\n## Rate and usage limits\n\nAPI access rate limits apply at a per-request basis in unit time. The limit is 60 requests per minute. Also, depending on your previous rate of API consumption, you may have usage limits. If you exceed either limit, your request will return an `HTTP 429 Too Many Requests` status code.\n\nEach API response returns the following set of headers to help you identify your use status:\n\n| Header | Description |\n| --- | --- |\n| `X-RateLimit-Limit` | The maximum number of requests that the consumer is permitted to make per minute. |\n| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window. |\n| `X-RateLimit-Reset` | The time at which the current rate limit window resets in UTC epoch seconds. |\n\n### 400 response\n\nAn `HTTP 400` response from our servers indicates that some required parameter is missing from the request body or query parameters, or that the value of one or more of the provided parameters has not been set or encoded correctly. This error response would also contain a set of the missing or erroneous parameter names, that can be used for debugging purposes.\n\n### 503 response\n\nAn `HTTP 503` response from our servers indicates there is an unexpected spike in API access traffic. The server is usually operational within the next sixty minutes. If the outage persists or you receive any other form of an `HTTP 5XX` error, contact us for support.\n\n## Need some help?\n\nIf you have any questions, please reach out to our team over email.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Post form data",
+			"item": [
+				{
+					"name": "Post form data",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e69039a7-ac46-4aa7-af5b-0710a264db0d",
+								"exec": [
+									"const url = pm.request.url;",
+									"const allowedMediumValues = [\"organic\", \"cpc\", \"referral\", \"none\", \"email\", \"banner\", \"landing\"];",
+									"const allowedSourceValues = [\"website\", \"facebook\", \"social\"];",
+									"const allowedCampaignValues = [\"getmyuni\", \"twigz\", \"collegedunia\", \"careers360\", \"shiksha\", \"zollege\", \"collegesearch\", \"exametc\", \"justdial\"];",
+									"",
+									"if (!url.query.has(\"medium\") || !allowedMediumValues.includes(url.query.get(\"medium\"))) {",
+									"  console.error(`Missing or invalid medium parameter. Allowed values: ${allowedMediumValues.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									"",
+									"if (!url.query.has(\"source\") || !allowedSourceValues.includes(url.query.get(\"source\"))) {",
+									"  console.error(`Missing or invalid source parameter. Allowed values: ${allowedSourceValues.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									"",
+									"if (!url.query.has(\"campaign\") || !allowedCampaignValues.includes(url.query.get(\"campaign\"))) {",
+									"  console.error(`Missing or invalid campaign parameter. Allowed values: ${allowedCampaignValues.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									"",
+									"const requestBody = pm.request.body.urlencoded;",
+									"",
+									"if(!requestBody) {",
+									"    console.error(\"Request body must be URL-encoded\");",
+									"    pm.execution.skipRequest();",
+									"}",
+									"",
+									"const requiredFields = [\"name\", \"email\", \"phone\", \"state\", \"city\", \"remarks\", \"course\", \"institute\"];",
+									"",
+									"const missingFields = requiredFields.filter((field) => !requestBody.has(field));",
+									"if (missingFields.length > 0) {",
+									"  console.error(`Missing required fields in request body: ${missingFields.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									"",
+									"const allowedCourses = [\"btech\", \"bba\", \"bca\", \"mba\", \"mca\", \"mtech\", \"btech_lateral\", \"bsc\", \"msc\", \"bpt\", \"mpt\", \"emba\", \"bhhm\", \"mot\", \"bba-llb\", \"phd\", \"bba-mba\", \"bhmct\", \"bhta\"];",
+									"const allowedInstitutes = [\"uem_kolkata\", \"uem_jaipur\", \"iem_kolkata\"];",
+									"",
+									"if (!allowedCourses.includes(requestBody.get(\"course\"))) {",
+									"  console.error(`Invalid course value. Allowed values: ${allowedCourses.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									"",
+									"if (!allowedInstitutes.includes(requestBody.get(\"institute\"))) {",
+									"  console.error(`Invalid institute value. Allowed values: ${allowedInstitutes.join(\", \")}`);",
+									"  pm.execution.skipRequest();",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7363981d-0ab4-4f69-ba20-700e5e4cc27b",
+								"exec": [
+									"pm.test('Response code is 200', () => {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"const requestBody = pm.request.body.urlencoded.all();",
+									"const responseData = pm.response.json()?.data;",
+									"",
+									"pm.test(\"Respose status is success\", () => {",
+									"    pm.expect(pm.response.json()?.success).to.equal(true);",
+									"});",
+									"",
+									"for (const key in requestBody) {",
+									"    const requestKey = requestBody[key]['key'];",
+									"    // Convert key to title case",
+									"    const requestKeyName = requestKey.charAt(0).toUpperCase() + requestKey.substr(1).toLowerCase();",
+									"    const requestValue = requestBody[key]['value'];",
+									"    const responseValue = responseData[requestKey];",
+									"",
+									"    pm.test(`${requestKeyName} is correctly captured`, () => {",
+									"        pm.expect(responseValue).to.equal(requestValue);",
+									"    });",
+									"}",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"id": "6edd7f68-1ad5-437d-8df5-364d93835dca",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "{{$randomFirstName}} {{$randomLastName}}",
+									"description": "Name of the student",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "{{$randomEmail}}",
+									"description": "Email of the student",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "{{$randomPhoneNumber}}",
+									"description": "Phone number of the student",
+									"type": "text"
+								},
+								{
+									"key": "state",
+									"value": "{{$randomCountry}}",
+									"description": "State student belongs to",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "{{$randomCity}}",
+									"description": "City student belongs to",
+									"type": "text"
+								},
+								{
+									"key": "remarks",
+									"value": "{{$randomLoremSentence}}",
+									"description": "Any additional comment/remarks the student has submitted",
+									"type": "text"
+								},
+								{
+									"key": "course",
+									"value": "btech",
+									"description": "Possible values for course:\n- btech\n- bba\n- bca\n- mba\n- mca\n- mtech\n- btech_lateral\n- bsc\n- msc\n- bpt\n- mpt\n- emba\n- bhhm\n- mot\n- bba-llb\n- phd\n- bba-mba\n- bhmct\n- bhta",
+									"type": "text"
+								},
+								{
+									"key": "institute",
+									"value": "uem_kolkata",
+									"description": "Possible values for institute:\n- uem_kolkata\n- uem_jaipur\n- iem_kolkata",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{API_HOST}}/api/data?medium=landing&source=website&campaign=getmyuni",
+							"host": [
+								"{{API_HOST}}"
+							],
+							"path": [
+								"api",
+								"data"
+							],
+							"query": [
+								{
+									"key": "medium",
+									"value": "landing",
+									"description": "Possible values for medium:\n- organic\n- cpc\n- referral\n- none\n- email\n- banner\n- landing"
+								},
+								{
+									"key": "source",
+									"value": "website",
+									"description": "Possible values for source:\n- website\n- facebook\n- social"
+								},
+								{
+									"key": "campaign",
+									"value": "getmyuni",
+									"description": "Possible values for campaign:\n- getmyuni\n- twigz\n- collegedunia\n- careers360\n- shiksha\n- zollege\n- collegesearch\n- exametc\n- justdial"
+								}
+							]
+						},
+						"description": "Saves a set of student data from the form containing the following parameters"
+					},
+					"response": [
+						{
+							"id": "048bdd98-a441-43b6-95ef-52f13704afee",
+							"name": "Success response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{$randomFirstName}} {{$randomLastName}}",
+											"description": "Name of the student",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "{{$randomEmail}}",
+											"description": "Email of the student",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "{{$randomPhoneNumber}}",
+											"description": "Phone number of the student",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "{{$randomCountry}}",
+											"description": "State student belongs to",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "{{$randomCity}}",
+											"description": "City student belongs to",
+											"type": "text"
+										},
+										{
+											"key": "remarks",
+											"value": "{{$randomLoremSentence}}",
+											"description": "Any additional comment/remarks the student has submitted",
+											"type": "text"
+										},
+										{
+											"key": "course",
+											"value": "btech",
+											"description": "Possible values for course:\n- btech\n- bba\n- bca\n- mba\n- mca\n- mtech\n- btech_lateral\n- bsc\n- msc\n- bpt\n- mpt\n- emba\n- bhhm\n- mot\n- bba-llb\n- phd\n- bba-mba\n- bhmct\n- bhta",
+											"type": "text"
+										},
+										{
+											"key": "institute",
+											"value": "uem_kolkata",
+											"description": "Possible values for institute:\n- uem_kolkata\n- uem_jaipur\n- iem_kolkata",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_HOST}}/api/data?medium=landing&source=website&campaign=getmyuni",
+									"host": [
+										"{{API_HOST}}"
+									],
+									"path": [
+										"api",
+										"data"
+									],
+									"query": [
+										{
+											"key": "medium",
+											"value": "landing",
+											"description": "Possible values for medium:\n- organic\n- cpc\n- referral\n- none\n- email\n- banner\n- landing"
+										},
+										{
+											"key": "source",
+											"value": "website",
+											"description": "Possible values for source:\n- website\n- facebook\n- social"
+										},
+										{
+											"key": "campaign",
+											"value": "getmyuni",
+											"description": "Possible values for campaign:\n- getmyuni\n- twigz\n- collegedunia\n- careers360\n- shiksha\n- zollege\n- collegesearch\n- exametc\n- justdial"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 14 Jan 2024 02:15:23 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "60"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "59"
+								},
+								{
+									"key": "vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=cz%2FgrwhqqVurE1a0PwMc1A1B1CRzQV0RmguYr60exmJh8V%2FR28xPujU2FYCf%2FsZ%2BraicKgQl7vTWlVGs1aF7PT3PF5x0zoJTf5ej904TYqqKGucglwxy2MnsfgA5z4lwVQ%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+								},
+								{
+									"key": "NEL",
+									"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "84525eee0b44401e-SIN"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "br"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"name\": \"Monserrate Schiller\",\n        \"email\": \"Frederique63@gmail.com\",\n        \"phone\": \"904-807-1221\",\n        \"state\": \"Macedonia\",\n        \"city\": \"Schuylermouth\",\n        \"remarks\": \"Non reprehenderit sint eveniet explicabo dolorum sequi est eos aliquid.\",\n        \"course\": \"btech\",\n        \"institute\": \"uem_kolkata\",\n        \"medium\": \"landing\",\n        \"source\": \"website\",\n        \"campaign\": \"getmyuni\"\n    }\n}"
+						},
+						{
+							"id": "ba807acb-2aab-46d4-b206-199d04111619",
+							"name": "Error response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "name",
+											"value": "{{$randomFirstName}} {{$randomLastName}}",
+											"description": "Name of the student",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "{{$randomEmail}}",
+											"description": "Email of the student",
+											"type": "text"
+										},
+										{
+											"key": "phone",
+											"value": "{{$randomPhoneNumber}}",
+											"description": "Phone number of the student",
+											"type": "text"
+										},
+										{
+											"key": "state",
+											"value": "{{$randomCountry}}",
+											"description": "State student belongs to",
+											"type": "text"
+										},
+										{
+											"key": "city",
+											"value": "{{$randomCity}}",
+											"description": "City student belongs to",
+											"type": "text"
+										},
+										{
+											"key": "remarks",
+											"value": "{{$randomLoremSentence}}",
+											"description": "Any additional comment/remarks the student has submitted",
+											"type": "text"
+										},
+										{
+											"key": "course",
+											"value": "btech",
+											"description": "Possible values for course:\n- btech\n- bba\n- bca\n- mba\n- mca\n- mtech\n- btech_lateral\n- bsc\n- msc\n- bpt\n- mpt\n- emba\n- bhhm\n- mot\n- bba-llb\n- phd\n- bba-mba\n- bhmct\n- bhta",
+											"type": "text",
+											"disabled": true
+										},
+										{
+											"key": "institute",
+											"value": "uem_kolkata",
+											"description": "Possible values for institute:\n- uem_kolkata\n- uem_jaipur\n- iem_kolkata",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{API_HOST}}/api/data?medium=landing&source=website&campaign=getmyuni",
+									"host": [
+										"{{API_HOST}}"
+									],
+									"path": [
+										"api",
+										"data"
+									],
+									"query": [
+										{
+											"key": "medium",
+											"value": "landing",
+											"description": "Possible values for medium:\n- organic\n- cpc\n- referral\n- none\n- email\n- banner\n- landing"
+										},
+										{
+											"key": "source",
+											"value": "website",
+											"description": "Possible values for source:\n- website\n- facebook\n- social"
+										},
+										{
+											"key": "campaign",
+											"value": "getmyuni",
+											"description": "Possible values for campaign:\n- getmyuni\n- twigz\n- collegedunia\n- careers360\n- shiksha\n- zollege\n- collegesearch\n- exametc\n- justdial"
+										}
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sun, 14 Jan 2024 02:16:15 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "x-ratelimit-limit",
+									"value": "60"
+								},
+								{
+									"key": "x-ratelimit-remaining",
+									"value": "57"
+								},
+								{
+									"key": "vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "CF-Cache-Status",
+									"value": "DYNAMIC"
+								},
+								{
+									"key": "Report-To",
+									"value": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=GCmyDTJURTehGpRikgmnaiFtNxecgofJG5QDXaETmTx2RNhfYes%2B%2B2IYrInET1FBiLhV6S66uGBOLy5vXis44fQ1oeD85nIctXORIecESelU1AsiJrbsblc8cU%2Bfp8L3Tw%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}"
+								},
+								{
+									"key": "NEL",
+									"value": "{\"success_fraction\":0,\"report_to\":\"cf-nel\",\"max_age\":604800}"
+								},
+								{
+									"key": "Strict-Transport-Security",
+									"value": "max-age=15552000; includeSubDomains; preload"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "Server",
+									"value": "cloudflare"
+								},
+								{
+									"key": "CF-RAY",
+									"value": "845260377f0b401e-SIN"
+								},
+								{
+									"key": "alt-svc",
+									"value": "h3=\":443\"; ma=86400"
+								}
+							],
+							"cookie": [],
+							"responseTime": null,
+							"body": "{\n    \"success\": false,\n    \"errors\": {\n        \"course\": [\n            \"The course field is required.\"\n        ]\n    }\n}"
+						}
+					]
+				}
+			],
+			"id": "bf8aaeab-d811-4b26-9df7-f1d3fcc3fee4",
+			"description": "**Method:** `POST`\n\n**Encoding:** `x-www-form-urlencoded`\n\n**Endpoint:** `/api/data?medium=landing&campaign=getmyuni&source=website`\n\nSaves a set of student data from the form containing the following parameters.\n\n### Request URL Parameters\n\n- Possible values for `campaign` in the URL parameters are:\n    - `getmyuni`\n    - `twigz`\n    - `collegedunia`\n    - `careers360`\n    - `shiksha`\n    - `zollege`\n    - `collegesearch`\n    - `exametc`\n    - `justdial`\n- Possible values for `medium` in the URL parameters are:\n    - `organic`\n    - `cpc`\n    - `referral`\n    - `none`\n    - `email`\n    - `banner`\n    - `landing`\n- Possible values for `source` in the URL parameters are:\n    - `website`\n    - `facebook`\n    - `social`\n\n### Request Body Parameters\n\n| Name | Type | Description | Required |\n| --- | --- | --- | --- |\n| `name` | `string` | Name of the student | Yes |\n| `email` | `string` | Email of the student | Yes |\n| `phone` | `string` | Phone number of the student | Yes |\n| `state` | `string` | State student belongs to | No |\n| `city` | `string` | City student belongs to | Yes |\n| `remarks` | `longText` | Any additional comment/remarks the student has submitted | No |\n| `course` | `string` | Any one of the following strings:  <br>• `btech`  <br>• `bba`  <br>• `bca`  <br>• `mba`  <br>• `mca`  <br>• `mtech`  <br>• `btech_lateral`  <br>• `bsc`  <br>• `msc`  <br>• `bpt`  <br>• `mpt`  <br>• `emba`  <br>• `bhhm`  <br>• `mot`  <br>• `bba-llb`  <br>• `phd`  <br>• `bba-mba`  <br>• `bhmct`  <br>• `bhta` | Yes |\n| `institute` | `string` | Any one of the following strings:  <br>• `uem_kolkata`  <br>• `uem_jaipur`  <br>• `iem_kolkata` | Yes |\n\n### Sample Success Response\n\n``` javascript\n200 OK\n{\n  \"success\": {\n    \"data\": {\n      \"id\": 1,\n      \"name\": \"Student\",\n      \"email\": \"student@gmail.com\",\n      \"phone\": \"9862354689\",\n      \"state\": \"West Bengal\",\n      \"city\": \"Kolkata\",\n      \"remarks\": \"Hi, I am interested in taking admissions to UEM Kolkata campus.\",\n      \"medium\": \"landing\",\n      \"campaign\": \"getmyuni\",\n      \"source\": \"website\",\n      \"course\": \"btech\",\n      \"institute\": \"uem_kolkata\",\n      \"created_at\": \"2023-12-13 07:23:59\",\n      \"updated_at\": \"2023-12-13 07:23:59\"\n    }\n  }\n}\n\n ```\n\n### Sample Error Response (Required Field Missing)\n\n``` javascript\n400 Bad Request\n{\n  \"error\": {\n    \"name\": \"The name field is required”\n  }\n}\n\n ```\n\n### Courses List\n\n| S. No. | Course Name | Course Code |\n| --- | --- | --- |\n| 1 | B. Tech | `btech` |\n| 2 | BBA | `bba` |\n| 3 | BCA | `bca` |\n| 4 | MBA | `mba` |\n| 5 | MCA | `mca` |\n| 6 | M. Tech | `mtech` |\n| 7 | B. Tech (Lateral) | `btech_lateral` |\n| 8 | B. Sc. | `bsc` |\n| 9 | M. Sc. | `msc` |\n| 10 | BPT | `bpt` |\n| 11 | MPT | `mpt` |\n| 12 | Executive MBA | `emba` |\n| 13 | Bachelor in Hotel and Hospitality Management | `bhhm` |\n| 14 | Master of Occupational Therapy | `mot` |\n| 16 | BBA + LLB | `bba-llb` |\n| 17 | Doctor of Philosophy | `phd` |\n| 18 | BBA + MBA | `bba-mba` |\n| 19 | Bachelor of Hotel Management & Catering Technology | `bhmct` |\n| 20 | B. Sc. in Hospitality & Tourism Administration | `bhta` |"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "f964e744-ebc1-4375-9a1c-5a170a4a6910",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "3c95e4ac-69f3-43ec-b00c-77fedd313a27",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_HOST",
+			"value": "https://lms.uem.edu.in"
+		}
+	]
+}
