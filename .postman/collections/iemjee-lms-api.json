@@ -189,7 +189,7 @@
 								{
 									"key": "campaign",
 									"value": "getmyuni",
-									"description": "Possible values for campaign:\n- getmyuni\n- twigz\n- collegedunia\n- careers360\n- shiksha\n- zollege\n- collegesearch\n- exametc\n- justdial"
+									"description": "Possible values for campaign:\n- getmyuni\n- twigz\n- collegedunia\n- careers360\n- shiksha\n- zollege\n- collegesearch\n- exametc\n- justdial\n- collegebatch"
 								}
 							]
 						},
