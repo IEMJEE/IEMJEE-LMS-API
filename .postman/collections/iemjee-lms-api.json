@@ -555,8 +555,22 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
 						"method": "POST",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": [\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"answered\"\n        },\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"unanswered\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"description": "This API will be called by the external application to provide a status update on the calls made to the leads provided to them.\n\nAn `api_token` is required to access this API."
 					},
 					"response": []
 				}
