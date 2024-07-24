@@ -537,8 +537,14 @@
 						"disableBodyPruning": true
 					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {}
+						},
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "{{API_HOST}}/api/caller/leads",
+						"description": "This API will be queried by the external application for requesting leads from our LMS application.  \nAn `api_key` is required to access this API.  \nNo parameters / body is required."
 					},
 					"response": []
 				},
