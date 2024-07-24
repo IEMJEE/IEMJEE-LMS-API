@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "4323d02b-9de7-43b1-bab3-1471c63f3f15",
-		"name": "IEMJEE LMS API Documentation",
+		"name": "IEMJEE LMS Inbound Lead API Documentation",
 		"description": "## Getting started guide\n\nPlease keep the following points in mind as you integrate the IEMJEE LMS APIs:\n\n- You must send all requests encoded as `x-www-form-urlencoded`.\n- The API has [rate and usage limits](#rate-and-usage-limits).\n- The API only responds to HTTPS-secured communications. Any requests sent via HTTP return an HTTP 301 redirect to the corresponding HTTPS resources.\n- The API returns request responses in JSON format. When an API request returns an error, it is sent in the JSON response as an error key.\n    \n\n## Rate and usage limits\n\nAPI access rate limits apply at a per-request basis in unit time. The limit is 60 requests per minute. Also, depending on your previous rate of API consumption, you may have usage limits. If you exceed either limit, your request will return an `HTTP 429 Too Many Requests` status code.\n\nEach API response returns the following set of headers to help you identify your use status:\n\n| Header | Description |\n| --- | --- |\n| `X-RateLimit-Limit` | The maximum number of requests that the consumer is permitted to make per minute. |\n| `X-RateLimit-Remaining` | The number of requests remaining in the current rate limit window. |\n| `X-RateLimit-Reset` | The time at which the current rate limit window resets in UTC epoch seconds. |\n\n### 400 response\n\nAn `HTTP 400` response from our servers indicates that some required parameter is missing from the request body or query parameters, or that the value of one or more of the provided parameters has not been set or encoded correctly. This error response would also contain a set of the missing or erroneous parameter names, that can be used for debugging purposes.\n\n### 503 response\n\nAn `HTTP 503` response from our servers indicates there is an unexpected spike in API access traffic. The server is usually operational within the next sixty minutes. If the outage persists or you receive any other form of an `HTTP 5XX` error, contact us for support.\n\n## Need some help?\n\nIf you have any questions, please reach out to our team over email.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -526,58 +526,6 @@
 			],
 			"id": "bf8aaeab-d811-4b26-9df7-f1d3fcc3fee4",
 			"description": "**Method:** `POST`\n\n**Encoding:** `x-www-form-urlencoded`\n\n**Endpoint:** `/api/data?medium=landing&campaign=getmyuni&source=website`\n\nSaves a set of student data from the form containing the following parameters.\n\n### Request URL Parameters\n\n- Possible values for `campaign` in the URL parameters are:\n    - `getmyuni`\n        \n    - `twigz`\n        \n    - `collegedunia`\n        \n    - `careers360`\n        \n    - `shiksha`\n        \n    - `zollege`\n        \n    - `collegesearch`\n        \n    - `exametc`\n        \n    - `justdial`\n        \n    - `collegebatch`\n        \n- Possible values for `medium` in the URL parameters are:\n    - `organic`\n        \n    - `cpc`\n        \n    - `referral`\n        \n    - `none`\n        \n    - `email`\n        \n    - `banner`\n        \n    - `landing`\n        \n- Possible values for `source` in the URL parameters are:\n    - `website`\n        \n    - `facebook`\n        \n    - `social`\n        \n\n### Request Body Parameters\n\n| Name | Type | Description | Required |\n| --- | --- | --- | --- |\n| `name` | `string` | Name of the student | Yes |\n| `email` | `string` | Email of the student | Yes |\n| `phone` | `string` | Phone number of the student | Yes |\n| `state` | `string` | State student belongs to | No |\n| `city` | `string` | City student belongs to | Yes |\n| `remarks` | `longText` | Any additional comment/remarks the student has submitted | No |\n| `course` | `string` | Any one of the following strings:  <br>• `btech`  <br>• `bba`  <br>• `bca`  <br>• `mba`  <br>• `mca`  <br>• `mtech`  <br>• `btech_lateral`  <br>• `bsc`  <br>• `msc`  <br>• `bpt`  <br>• `mpt`  <br>• `emba`  <br>• `bhhm`  <br>• `mot`  <br>• `bba-llb`  <br>• `phd`  <br>• `bba-mba`  <br>• `bhmct`  <br>• `bhta` | Yes |\n| `institute` | `string` | Any one of the following strings:  <br>• `uem_kolkata`  <br>• `uem_jaipur`  <br>• `iem_kolkata` | Yes |\n\n### Sample Success Response\n\n``` javascript\n200 OK\n{\n  \"success\": {\n    \"data\": {\n      \"id\": 1,\n      \"name\": \"Student\",\n      \"email\": \"student@gmail.com\",\n      \"phone\": \"9862354689\",\n      \"state\": \"West Bengal\",\n      \"city\": \"Kolkata\",\n      \"remarks\": \"Hi, I am interested in taking admissions to UEM Kolkata campus.\",\n      \"medium\": \"landing\",\n      \"campaign\": \"getmyuni\",\n      \"source\": \"website\",\n      \"course\": \"btech\",\n      \"institute\": \"uem_kolkata\",\n      \"created_at\": \"2023-12-13 07:23:59\",\n      \"updated_at\": \"2023-12-13 07:23:59\"\n    }\n  }\n}\n\n ```\n\n### Sample Error Response (Required Field Missing)\n\n``` javascript\n400 Bad Request\n{\n  \"error\": {\n    \"name\": \"The name field is required”\n  }\n}\n\n ```\n\n### Courses List\n\n| S. No. | Course Name | Course Code |\n| --- | --- | --- |\n| 1 | B. Tech | `btech` |\n| 2 | BBA | `bba` |\n| 3 | BCA | `bca` |\n| 4 | MBA | `mba` |\n| 5 | MCA | `mca` |\n| 6 | M. Tech | `mtech` |\n| 7 | B. Tech (Lateral) | `btech_lateral` |\n| 8 | B. Sc. | `bsc` |\n| 9 | M. Sc. | `msc` |\n| 10 | BPT | `bpt` |\n| 11 | MPT | `mpt` |\n| 12 | Executive MBA | `emba` |\n| 13 | Bachelor in Hotel and Hospitality Management | `bhhm` |\n| 14 | Master of Occupational Therapy | `mot` |\n| 16 | BBA + LLB | `bba-llb` |\n| 17 | Doctor of Philosophy | `phd` |\n| 18 | BBA + MBA | `bba-mba` |\n| 19 | Bachelor of Hotel Management & Catering Technology | `bhmct` |\n| 20 | B. Sc. in Hospitality & Tourism Administration | `bhta` |"
-		},
-		{
-			"name": "Outbound Campaign APIs",
-			"item": [
-				{
-					"name": "Caller Leads",
-					"id": "8c7bb385-022a-41be-bb1b-ec9ce4ef4c3f",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{API_HOST}}/api/caller/leads",
-						"description": "This API will be queried by the external application for requesting leads from our LMS application.  \nAn `api_key` is required to access this API.  \nNo parameters / body is required."
-					},
-					"response": []
-				},
-				{
-					"name": "Call Event",
-					"id": "7baa7f4b-b96d-49f2-9973-3eb8cada94a9",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"status\": [\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"answered\"\n        },\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"unanswered\"\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{API_HOST}}/api/webhooks/caller/call-event",
-						"description": "This API will be called by the external application to provide a status update on the calls made to the leads provided to them.\n\nAn `api_token` is required to access this API."
-					},
-					"response": []
-				}
-			],
-			"id": "a3f5e21e-cb7b-4b30-a834-6cc8abe627dd",
-			"description": "## Info\n\n- **Title**: Caller Leads API\n    \n- **Version**: 1.0.0\n    \n- **Description**: API for managing caller leads and call events.\n    \n\n## Servers\n\n- **URL**: `https://api.example.com`\n    - **Description**: Production server\n        \n\n## Paths\n\n### GET /caller/leads\n\n- **Summary**: Get caller leads\n    \n- **Description**: Retrieve a list of caller leads with their details.\n    \n- **OperationId**: getCallerLeads\n    \n- **Security**:\n    \n    - ApiTokenAuth: \\[\\]\n        \n- **Responses**:\n    \n    - **Description**: A list of caller leads\n        \n\n``` javascript\n200 OK\n{\n  \"numbers\": [\n    {\n      \"parameters\": {\n        \"name\": \"johnDoe\",\n        \"profile_name\": \"InverstmentSpecialist\",\n        \"required_min_experience\": \"2\",\n        \"location\": \"Delhi\"\n      },\n      \"phone\": \"+918882024358\",\n      \"reference_id\": \"12344cdgsk\"\n    }\n  ],\n  \"lang\": \"en-IN\"\n}\n\n ```\n\n### POST /webhooks/caller/{outbound-campaign-id}/call-event\n\n- **Summary**: Post call event\n    \n- **Description**: Receive call event details for a specific outbound campaign.\n    \n- **OperationId**: postCallEvent\n    \n- **Parameters**:\n    \n    - **Name**: outbound-campaign-id\n        \n        - **In**: path\n            \n        - **Required**: true\n            \n        - **Description**: Outbound campaign ID\n            \n        - **Schema**:\n            \n            - **Type**: string\n                \n            - **Example**: \"campaign123\"\n                \n- **Security**:\n    \n    - ApiTokenAuth: \\[\\]\n        \n- **RequestBody**:\n    \n    - **Required**: true\n        \n- **Responses**:\n    \n    - **Description**: Call event processed successfully\n        \n\n``` javascript\n200 OK\n{\n    \"status\": [\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"answered\"\n        },\n        {\n            \"reference_id\": \"12344cdgsk\",\n            \"phone\": \"+918882024358\",\n            \"call_status\": \"unanswered\"\n        }\n    ]\n}\n\n ```\n\n## Components\n\n### Security Schemes\n\n- **ApiTokenAuth**:\n    \n    - **Type**: apiKey\n        \n    - **In**: header\n        \n    - **Name**: Authorization\n        \n    - **Description**: API token for authorization"
 		}
 	],
 	"event": [
